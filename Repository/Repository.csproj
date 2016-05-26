@@ -67,6 +67,7 @@
     <Compile Include="Repository\OrdersRepository.cs" />
     <Compile Include="Repository\MedicinesRepository.cs" />
     <Compile Include="Repository\RepositoryBase.cs" />
+    <Compile Include="TestClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

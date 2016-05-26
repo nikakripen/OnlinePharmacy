@@ -14,12 +14,7 @@ namespace Repository.Models
         public string E_mail { get; set; }
         public string PhoneNumber { get; set; }
         public string State { get; set; }
-        public List<Medicine> OrderedMedicines { get; set; }
-
-        public Order()
-        {
-            OrderedMedicines = new List<Medicine>();
-        }
+        public List<Medicine> OrderedMedicines { get; set; } 
         
     }
 }

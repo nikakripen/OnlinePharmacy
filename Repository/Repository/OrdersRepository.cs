@@ -3,6 +3,8 @@ using System.Data.Linq;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
+using Repository.Db;
 using Repository.Models;
 
 namespace Repository.Repository
@@ -46,20 +48,25 @@ namespace Repository.Repository
             dbOrders.E_mail = order.E_mail;
             dbOrders.PhoneNumber = order.PhoneNumber;
             dbOrders.State = order.State;
-            dbOrders.Medicines.Clear();
-            if (order.OrderedMedicines != null)
+            foreach (Medicine med in order.OrderedMedicines)
             {
-                dbOrders.Medicines.AddRange(order.OrderedMedicines.Select(m => new Db.Medicines()
-                {
-                    Id = m.Id,
-                    Name = m.Name,
-                    ProductForm = m.ProductForm,
-                    Manufacturer = m.Manufacturer,
-                    Recipe = Convert.ToByte(m.Recipe),
-                    Price = m.Price,
-                    Available = Convert.ToByte(m.Available)
-                }));
+                if(dbOrders.Medicines.FirstOrDefault(m=> m.Id == med.Id) == null)
+                    dbOrders.Medicines.Add((Medicines)((IQueryable<IDbEntity>)context.Medicines).FirstOrDefault(m => m.Id == med.Id));
             }
+            //dbOrders.Medicines.Clear();
+            //if (order.OrderedMedicines != null)
+            //{
+            //    dbOrders.Medicines.AddRange(order.OrderedMedicines.Select(m => new Db.Medicines()
+            //    {
+            //        Id = m.Id,
+            //        Name = m.Name,
+            //        ProductForm = m.ProductForm,
+            //        Manufacturer = m.Manufacturer,
+            //        Recipe = Convert.ToByte(m.Recipe),
+            //        Price = m.Price,
+            //        Available = Convert.ToByte(m.Available)
+            //    }));
+            //}
         }
     }
 }

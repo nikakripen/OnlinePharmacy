@@ -62,6 +62,7 @@ namespace AdminPart
         private void button2_Click(object sender, EventArgs e)
         {
             ordersPanel.BringToFront();
+            ordersPanel.OrdersList.Update();
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
