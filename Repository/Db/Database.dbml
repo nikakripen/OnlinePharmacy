@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="pharmacy" Class="DbContext" EntityBase="Db.IDbEntity" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=VERONIKA;Initial Catalog=pharmacy;User ID=sa" SettingsObjectName="Repository.Properties.Settings" SettingsPropertyName="pharmacyConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Medicines" Member="Medicines">
+    <Type Name="Medicines">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="ProductForm" Type="System.String" DbType="NVarChar(1000) NOT NULL" CanBeNull="false" />
+      <Column Name="Manufacturer" Type="System.String" DbType="NVarChar(1000) NOT NULL" CanBeNull="false" />
+      <Column Name="Recipe" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
+      <Column Name="Price" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="Available" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
+      <Association Name="Medicines_OrderedMedicines" Member="OrderedMedicines" ThisKey="Id" OtherKey="Medicine_Id" Type="OrderedMedicines" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Orders" Member="Orders">
+    <Type Name="Orders">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Surname" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Patronymic" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="[E-mail]" Member="E_mail" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="PhoneNumber" Type="System.String" DbType="NVarChar(15)" CanBeNull="true" />
+      <Column Name="State" Type="System.String" DbType="NVarChar(10) NOT NULL" CanBeNull="false" />
+      <Association Name="Orders_OrderedMedicines" Member="OrderedMedicines" ThisKey="Id" OtherKey="Order_Id" Type="OrderedMedicines" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OrderedMedicines" Member="OrderedMedicines">
+    <Type Name="OrderedMedicines">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Order_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Medicine_Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Medicines_OrderedMedicines" Member="Medicines" ThisKey="Medicine_Id" OtherKey="Id" Type="Medicines" IsForeignKey="true" DeleteOnNull="true" />
+      <Association Name="Orders_OrderedMedicines" Member="Orders" ThisKey="Order_Id" OtherKey="Id" Type="Orders" IsForeignKey="true" DeleteOnNull="true" />
+    </Type>
+  </Table>
+</Database>
