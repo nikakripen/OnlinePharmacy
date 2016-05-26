@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminPart", "Project2\AdminPart.csproj", "{11293C51-19A0-426B-A05A-CECD884CB5C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminPart", "AdminPart\AdminPart.csproj", "{11293C51-19A0-426B-A05A-CECD884CB5C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserPart", "Project\UserPart.csproj", "{E9C90B23-2790-4A98-B9CC-7870EFD69440}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserPart", "UserPart\UserPart.csproj", "{E9C90B23-2790-4A98-B9CC-7870EFD69440}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRepository", "TestRepository\TestRepository.csproj", "{89372C77-9DF7-4EAD-BE87-00A34BFB69F2}"
 EndProject
