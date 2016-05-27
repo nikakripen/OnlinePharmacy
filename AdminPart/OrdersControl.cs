@@ -21,7 +21,7 @@ namespace AdminPart
             InitializeComponent();
 
             OrdersList.AutoGenerateColumns = false;
-            OrdersList.DataSource = OrdRepository.GetAll();
+            //OrdersList.DataSource = OrdRepository.GetAll();
             OrdersList.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 DataPropertyName = "Surname",
@@ -56,7 +56,7 @@ namespace AdminPart
                 Width = 65
             });
 
-            OrdersList.Columns.Add(new DataGridViewCheckBoxColumn()
+            OrdersList.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 DataPropertyName = "State",
                 Name = "Состояние",

@@ -46,7 +46,8 @@ namespace AdminPart
         }
 
         static public readonly IRepository<Medicine> MedRepository = new MedicinesRepository();
-
+        private readonly IRepository<Order> OrdRepository = new OrdersRepository();
+        
         private void AdminForm_Load(object sender, EventArgs e)
         {
             medicinesControl.BringToFront();
