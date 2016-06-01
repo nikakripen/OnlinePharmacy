@@ -34,6 +34,7 @@
             this.SearchButton = new System.Windows.Forms.Button();
             this.SearchTextBox = new System.Windows.Forms.RichTextBox();
             this.CancelSearchButton = new System.Windows.Forms.Button();
+            this.AdminPanelName = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // OpenMedicineListButton
@@ -73,6 +74,7 @@
             // 
             this.SearchTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.SearchTextBox.Location = new System.Drawing.Point(190, 12);
+            this.SearchTextBox.Multiline = false;
             this.SearchTextBox.Name = "SearchTextBox";
             this.SearchTextBox.Size = new System.Drawing.Size(187, 37);
             this.SearchTextBox.TabIndex = 9;
@@ -90,20 +92,33 @@
             this.CancelSearchButton.Visible = false;
             this.CancelSearchButton.Click += new System.EventHandler(this.CancelSearchButton_Click);
             // 
+            // AdminPanelName
+            // 
+            this.AdminPanelName.AutoSize = true;
+            this.AdminPanelName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.AdminPanelName.Location = new System.Drawing.Point(8, 5);
+            this.AdminPanelName.Name = "AdminPanelName";
+            this.AdminPanelName.Size = new System.Drawing.Size(175, 48);
+            this.AdminPanelName.TabIndex = 11;
+            this.AdminPanelName.Text = "Панель \r\nадминистратора";
+            this.AdminPanelName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // AdminForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(751, 369);
+            this.Controls.Add(this.AdminPanelName);
             this.Controls.Add(this.CancelSearchButton);
             this.Controls.Add(this.SearchTextBox);
             this.Controls.Add(this.SearchButton);
             this.Controls.Add(this.OpenOrderListButton);
             this.Controls.Add(this.OpenMedicineListButton);
             this.Name = "AdminForm";
-            this.Text = "Form1";
+            this.Text = "Электронная аптека";
             this.Load += new System.EventHandler(this.AdminForm_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -114,6 +129,7 @@
         private System.Windows.Forms.Button SearchButton;
         private System.Windows.Forms.RichTextBox SearchTextBox;
         private System.Windows.Forms.Button CancelSearchButton;
+        private System.Windows.Forms.Label AdminPanelName;
 
     }
 }

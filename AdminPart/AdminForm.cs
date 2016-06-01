@@ -18,34 +18,44 @@ namespace AdminPart
 {
     public partial class AdminForm : Form
     {
-        static public OrdersControl ordersPanel;
+        static public OrdersControl ordersControl;
         static public OrderViewControl orderViewControl;
         static public MedicinesControl medicinesControl;
-        static public MedicineViewControl medicineViewControl;     
+        static public MedicineViewControl medicineViewControl;
+        static public string[] StatusMas = {"не обработан", "обработан", "доставлен"};
 
         public AdminForm()
         {
             InitializeComponent();
 
-            ordersPanel = new OrdersControl();
-            ordersPanel.Parent = this;
-            ordersPanel.Location = new Point(190, 63);
+            ordersControl = new OrdersControl
+            {
+                Parent = this,
+                Location = new Point(190, 63)
+            };
 
-            orderViewControl = new OrderViewControl();
-            orderViewControl.Parent = this;
-            ordersPanel.Location = new Point(190, 63);
+            orderViewControl = new OrderViewControl
+            {
+                Parent = this,
+                Location = new Point(190, 63)
+            };
+            orderViewControl.StatusBox.Items.AddRange(AdminForm.StatusMas);
 
-            medicinesControl = new MedicinesControl();
-            medicinesControl.Parent = this;
-            medicinesControl.Location = new Point(190, 63);
+            medicinesControl = new MedicinesControl
+            {
+                Parent = this,
+                Location = new Point(190, 63)
+            };
 
-            medicineViewControl = new MedicineViewControl();
-            medicineViewControl.Parent = this;
-            medicineViewControl.Location = new Point(190, 63);
+            medicineViewControl = new MedicineViewControl
+            {
+                Parent = this,
+                Location = new Point(190, 63)
+            };
 
         }
 
-        static public readonly IRepository<Medicine> MedRepository = new MedicinesRepository();
+        private readonly IRepository<Medicine> MedRepository = new MedicinesRepository();
         private readonly IRepository<Order> OrdRepository = new OrdersRepository();
         
         private void AdminForm_Load(object sender, EventArgs e)
@@ -62,8 +72,8 @@ namespace AdminPart
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ordersPanel.BringToFront();
-            ordersPanel.OrdersList.Update();
+            ordersControl.BringToFront();
+            ordersControl.OrdersList.DataSource = OrdRepository.GetAll();
         }
 
         private void SearchButton_Click(object sender, EventArgs e)

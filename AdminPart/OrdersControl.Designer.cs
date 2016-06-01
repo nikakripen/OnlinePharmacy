@@ -56,6 +56,7 @@
             this.OrdersList.Size = new System.Drawing.Size(480, 230);
             this.OrdersList.TabIndex = 14;
             this.OrdersList.VirtualMode = true;
+            this.OrdersList.RowStateChanged += new System.Windows.Forms.DataGridViewRowStateChangedEventHandler(this.OrdersList_RowStateChanged);
             // 
             // OpenViewOrderPannelButton
             // 

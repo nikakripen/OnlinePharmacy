@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Repository.Models;
-//using Repository.Properties;
 using Repository.Repository;
 
 namespace AdminPart
@@ -74,7 +73,7 @@ namespace AdminPart
             AdminForm.medicineViewControl.NameBox.Text = med.Name;
             AdminForm.medicineViewControl.ProductFormBox.Text = med.ProductForm;
             AdminForm.medicineViewControl.ManufacturerBox.Text = med.Manufacturer;
-            AdminForm.medicineViewControl.PriceBox.Text = med.Price.ToString();
+            AdminForm.medicineViewControl.PriceBox.Text = med.Price.ToString("##################");
             AdminForm.medicineViewControl.RecipeСheckBox.Checked = med.Recipe;
             AdminForm.medicineViewControl.AvailableCheckBox.Checked = med.Available;
             AdminForm.medicineViewControl.BringToFront();
@@ -98,7 +97,28 @@ namespace AdminPart
         private void OpenAddMedPannelButton_Click(object sender, EventArgs e)
         {
             AdminForm.medicineViewControl.BringToFront();
-            AdminForm.medicineViewControl.SafeMedButton.Text = "Добавить";   
+            AdminForm.medicineViewControl.SafeMedButton.Text = "Добавить";
+            
+            
+            foreach (Control control in AdminForm.medicineViewControl.Controls)
+            {
+                if (control is TextBox)
+                    control.Text = "";
+            }
+        }
+
+        private void MedicineList_RowStateChanged(object sender, DataGridViewRowStateChangedEventArgs e)
+        {
+            if (MedicineList.SelectedRows.Count == 0)
+            {
+                OpenChangeMedPanelButton.Enabled = false;
+                DeleteMedButton.Enabled = false;
+            }
+            else
+            {
+                OpenChangeMedPanelButton.Enabled = true;
+                DeleteMedButton.Enabled = true;
+            }
         }
     }
 }

@@ -1,12 +1,36 @@
-﻿using NUnit;
+﻿using System;
+using System.Collections.Generic;
+using NUnit;
 using Repository.Models;
 using Repository.Repository;
 using Repository.Filters;
 using System.Linq;
 using NUnit.Framework;
+using Repository.Db;
 
 namespace TestRepository
 {
+    class TestUpdateEntry:OrdersRepository
+    {
+        public void TestUpdateEntryWhithNullList(Orders dbord, Order ord)
+        {
+            UpdateEntry(dbord,ord);
+            List<Medicines> list = dbord.Medicines.ToList();
+            Assert.IsTrue(list.Count == 0);
+        }
+
+        public void TestUpdateEntryWhithList(Orders dbord, Order ord)
+        {
+            UpdateEntry(dbord, ord);
+            List<Medicines> dbmed_list = dbord.Medicines.ToList();
+            List<Medicine> med_list = ord.OrderedMedicines;
+            foreach (var dbmed in dbmed_list)
+            {
+                Assert.IsTrue(med_list.Exists(m => m.Id == dbmed.Id));
+            }
+        }
+    }
+    [TestFixture]
     class TestOrdersRepository
     {
         OrdersRepository repository = new OrdersRepository();
@@ -20,21 +44,25 @@ namespace TestRepository
             Assert.AreEqual(order.PhoneNumber, o_db.PhoneNumber);
             Assert.AreEqual(order.State, o_db.State);
         }
+        public Order NewTestOrder()
+        {
+            return new Order()
+            {
+                Surname = "test",
+                Name = "test",
+                Patronymic = "test",
+                E_mail = "test@tast.test",
+                PhoneNumber = "1111",
+                State = "не обработан"
+            };
+        }
 
 
         [Test]
-        public void TestAddOrderWithoutMed()
+        public void TestSave()
         {
             // подготовка
-            var order = new Order()
-            {
-                Surname = "Крипень",
-                Name = "Вероника",
-                Patronymic = "Сергеевна",
-                E_mail = "nika.kripen@gmail.com",
-                PhoneNumber = "+375293326196",
-                State = "Не обработан"
-            };
+            var order = NewTestOrder();
             
             try
             {
@@ -53,7 +81,7 @@ namespace TestRepository
         }
 
         [Test]
-        public void TestAddOrderWithMed()
+        public void TestSaveOrderWithMed()
         {
             // подготовка
             var MedRep = new MedicinesRepository();
@@ -67,20 +95,12 @@ namespace TestRepository
                 Recipe = true
             };
 
-            var order = new Order()
-            {
-                Surname = "Крипень",
-                Name = "Вероника",
-                Patronymic = "Сергеевна",
-                E_mail = "nika.kripen@gmail.com",
-                PhoneNumber = "+375293326196",
-                State = "Не обработан"
-            };
-            
+            var order = NewTestOrder();
 
             try
             {
                 MedRep.Save(med);
+                order.OrderedMedicines = new List<Medicine>();
                 order.OrderedMedicines.Add(med);
                 // выполнение
                 repository.Save(order);
@@ -88,7 +108,6 @@ namespace TestRepository
                 Order o_db = repository.GetAll().FirstOrDefault(o => o.Id == order.Id);
 
                 Assert.IsTrue(o_db != null);
-
                 var med_db = o_db.OrderedMedicines.Find(m => m.Id == med.Id);
                 Assert.AreEqual(med.Name, med_db.Name);
             }
@@ -105,134 +124,80 @@ namespace TestRepository
         public void TestAddMedToOrder()
         {
             var MedRep = new MedicinesRepository();
-            var med = MedRep.GetAll().FirstOrDefault(m => m.Name == "гроприносин");
-            var order = repository.GetAll().FirstOrDefault(o => o.Name == "Вероника");
-            order.OrderedMedicines.Add(med);
+            var med = new Medicine()
+            {
+                Name = "11111",
+                ProductForm = "123",
+                Manufacturer = "Белфарма",
+                Available = true,
+                Price = 12000,
+                Recipe = true
+            };
+            var order = NewTestOrder();
+            MedRep.Save(med);
             repository.Save(order);
 
-            var order1 = repository.GetAll().FirstOrDefault(o => o.Id == order.Id);
-            Assert.True(order1.OrderedMedicines.Contains(med));
+            try
+            {
+                var med1 = MedRep.GetAll().FirstOrDefault(m => m.Name == "11111");
+                var order1 = repository.GetAll().FirstOrDefault(o => o.Name == "test");
+                order1.OrderedMedicines.Add(med1);
+                repository.Save(order1);
 
-
+                var order2 = repository.GetAll().FirstOrDefault(o => o.Id == order.Id);
+                Assert.True(order2.OrderedMedicines.Exists(m => m.Id == med.Id));
+            }
+            finally
+            {
+                if (order.Id != 0)
+                    repository.Delete(order);
+                if (med.Id != 0)
+                    MedRep.Delete(med);
+            }
         }
+
         [Test]
         public void TestDeleteForId()
         {
             // подготовка
-            var repository = new MedicinesRepository();
-            var med = new Medicine()
-            {
-                Name = "дюфастон",
-                ProductForm = "123",
-                Manufacturer = "Белфарма",
-                Available = true,
-                Price = 12000,
-                Recipe = true
-            };
-            repository.Save(med);
+            var order = NewTestOrder();
+            repository.Save(order);
 
             // выполнение
             try
             {
-                repository.Delete(med.Id);
+                repository.Delete(order.Id);
                 // проверка
-                var m_db = repository.GetAll().FirstOrDefault(m => m.Id == med.Id);
-                Assert.IsTrue(m_db == null);
+                Assert.Throws(typeof(InvalidOperationException),
+                    delegate { repository.GetAll().Single(o => o.Id == order.Id); });
             }
             finally
             {
-                if (med.Id != 0)
-                    repository.Delete(med);
+                if (order.Id != 0)
+                    repository.Delete(order);
             }
         }
 
         [Test]
-        public void TestSelectWithId()
+        public void TestUpdateEntryWhithNullList()
         {
-            // подготовка
-            var repository = new MedicinesRepository();
-            // выполнение
-            var med = new Medicine()
-            {
-                Name = "дюфастон",
-                ProductForm = "123",
-                Manufacturer = "Белфарма",
-                Available = true,
-                Price = 12000,
-                Recipe = true
-            };
-            repository.Save(med);
+            Orders dbOrders = new Orders();
+            Order order = NewTestOrder();
 
-            try
-            {
-                // проверка
-                var m_db = repository.GetAll().WithId(med.Id).SingleOrDefault();
-                Assert.AreEqual(m_db.Id, med.Id);
-            }
-            finally
-            {
-                if (med.Id != 0)
-                    repository.Delete(med);
-            }
+            var newRep = new TestUpdateEntry();
+            newRep.TestUpdateEntryWhithNullList(dbOrders, order);
         }
 
         [Test]
-        public void TestSelectWithNameLike()
+        public void TestUpdateEntryWhithList()
         {
-            // подготовка
-            var repository = new MedicinesRepository();
-            // выполнение
-            var med = new Medicine()
-            {
-                Name = "дюфастон",
-                ProductForm = "123",
-                Manufacturer = "Белфарма",
-                Available = true,
-                Price = 12000,
-                Recipe = true
-            };
-            repository.Save(med);
+            Orders dbOrders = new Orders();
+            dbOrders.Medicines.Add(new Medicines(){Id = 1, Name = "testmed"});
+            Order order = NewTestOrder();
+            order.OrderedMedicines = new List<Medicine>() { new Medicine() { Id = 1, Name = "testmed" }};
 
-            try
-            {
-                // проверка
-                var m_db = repository.GetAll().WithNameLike("дюфастон").FirstOrDefault();
-                Assert.AreEqual(m_db.Name, med.Name);
-            }
-            finally
-            {
-                if (med.Id != 0)
-                    repository.Delete(med);
-            }
-        }
-        [Test]
-        public void TestSelectWithProductFormLike()
-        {
-            // подготовка
-            var repository = new MedicinesRepository();
-            // выполнение
-            var med = new Medicine()
-            {
-                Name = "дюфастон",
-                ProductForm = "123",
-                Manufacturer = "Белфарма",
-                Available = true,
-                Price = 12000,
-                Recipe = true
-            };
-            repository.Save(med);
-
-            try
-            {
-                // проверка
-                var m_db = repository.GetAll().WithProductFormLike("123").FirstOrDefault();
-                Assert.AreEqual(m_db.ProductForm, med.ProductForm);
-            }
-            finally
-            {
-                if (med.Id != 0)
-                    repository.Delete(med);
-            }
+            var newRep = new TestUpdateEntry();
+            newRep.TestUpdateEntryWhithList(dbOrders, order);
         }
     }
 }

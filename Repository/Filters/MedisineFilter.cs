@@ -22,8 +22,8 @@ namespace Repository.Filters
 
         public static bool IsMedicineExist(this IQueryable<Medicine> q, string name,  string productForm, string manufacturer)
         {
-            return q.Any(medisine => medisine.Name.StartsWith(name) && 
-                medisine.ProductForm.StartsWith(productForm) && medisine.Manufacturer.StartsWith(manufacturer));
+            return q.Any(medisine => medisine.Name.Equals(name) && 
+                medisine.ProductForm.Equals(productForm) && medisine.Manufacturer.Equals(manufacturer));
         }
 
     }

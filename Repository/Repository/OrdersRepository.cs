@@ -48,11 +48,15 @@ namespace Repository.Repository
             dbOrders.E_mail = order.E_mail;
             dbOrders.PhoneNumber = order.PhoneNumber;
             dbOrders.State = order.State;
-            foreach (Medicine med in order.OrderedMedicines)
+            if (order.OrderedMedicines != null)
             {
-                if(dbOrders.Medicines.FirstOrDefault(m=> m.Id == med.Id) == null)
-                    dbOrders.Medicines.Add((Medicines)((IQueryable<IDbEntity>)context.Medicines).FirstOrDefault(m => m.Id == med.Id));
-            }
+                foreach (Medicine med in order.OrderedMedicines)
+                {
+                    if (dbOrders.Medicines.FirstOrDefault(m => m.Id == med.Id) == null)
+                        dbOrders.Medicines.Add(
+                            (Medicines) ((IQueryable<IDbEntity>) context.Medicines).FirstOrDefault(m => m.Id == med.Id));
+                }
+            }   
             //dbOrders.Medicines.Clear();
             //if (order.OrderedMedicines != null)
             //{

@@ -57,6 +57,7 @@
             this.MedicineList.Size = new System.Drawing.Size(480, 230);
             this.MedicineList.TabIndex = 14;
             this.MedicineList.VirtualMode = true;
+            this.MedicineList.RowStateChanged += new System.Windows.Forms.DataGridViewRowStateChangedEventHandler(this.MedicineList_RowStateChanged);
             // 
             // OpenChangeMedPanelButton
             // 
